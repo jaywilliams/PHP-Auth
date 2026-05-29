@@ -1273,8 +1273,9 @@ final class Auth extends UserManager {
 		$openRequests = $this->throttling ? (int) $this->getOpenPasswordResetRequests($userData['id']) : 0;
 
 		if ($openRequests < $maxOpenRequests) {
-			$this->throttle([ 'requestPasswordReset', $this->getIpAddress() ], 4, (60 * 60 * 24 * 7), 2);
-			$this->throttle([ 'requestPasswordReset', 'user', $userData['id'] ], 4, (60 * 60 * 24 * 7), 2);
+			// Modified to 6 requests per 24 hour period
+			$this->throttle([ 'requestPasswordReset', $this->getIpAddress() ], 4, (60 * 60 * 24 * 1), 6);
+			$this->throttle([ 'requestPasswordReset', 'user', $userData['id'] ], 4, (60 * 60 * 24 * 1), 6);
 
 			$this->logForAudit('password.reset.start', $userData['id'], [ 'email' => EmailAddress::mask($email) ]);
 
